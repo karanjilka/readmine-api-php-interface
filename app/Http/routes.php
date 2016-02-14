@@ -19,7 +19,6 @@ Route::get('/laform-example', function () {
     return view('laform-example');
 });
 
-Route::resource('vuetest','VueTestController');
 Route::get('redmine/issue/clear-cache','Redmineapi\RedmineIssueController@clearCache');
 Route::post('redmine/issue/timelog','Redmineapi\RedmineIssueController@postTimeLog');
 Route::resource('redmine/issue','Redmineapi\RedmineIssueController');
