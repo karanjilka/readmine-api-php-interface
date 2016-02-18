@@ -14,6 +14,7 @@
                 {!! Laform::field('name','text',[
                 'template'=>'none',
                 'label'=>'Name',
+                'plain'=>true
                 ]) !!}
 
                 {!! Laform::field('email','email',['label'=>'Email address','template'=>'none']) !!}

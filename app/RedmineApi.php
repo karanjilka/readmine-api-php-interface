@@ -16,7 +16,9 @@ class RedmineApi
     public function getProjects()
     {
         if (!Cache::has('projects')) {
-            Cache::store('file')->forever('projects', $this->client->project->all());
+            Cache::store('file')->forever('projects', $this->client->project->all([
+                'limit'=>200
+            ]));
         }
 
         $projects = Cache::store('file')->get('projects');
@@ -81,7 +83,9 @@ class RedmineApi
     public function getUsers()
     {
         if (!Cache::has('users')) {
-            Cache::store('file')->forever('users', $this->client->user->all());
+            Cache::store('file')->forever('users', $this->client->user->all([
+                'limit'=>200
+            ]));
         }
 
         $users = Cache::store('file')->get('users');
@@ -97,7 +101,9 @@ class RedmineApi
     public function getActivity()
     {
         if (!Cache::has('time_entry_activity')) {
-            Cache::store('file')->forever('time_entry_activity', $this->client->time_entry_activity->all());
+            Cache::store('file')->forever('time_entry_activity', $this->client->time_entry_activity->all([
+                'limit'=>200
+            ]));
         }
 
         $data = Cache::store('file')->get('time_entry_activity');
@@ -108,8 +114,17 @@ class RedmineApi
     public function setAllCache()
     {
         Cache::flush();
-        Cache::store('file')->forever('projects', $this->client->project->all());
-        Cache::store('file')->forever('time_entry_activity', $this->client->time_entry_activity->all());
-        Cache::store('file')->forever('query', $this->client->query->all());
+        Cache::store('file')->forever('projects', $this->client->project->all([
+            'limit'=>200
+        ]));
+        Cache::store('file')->forever('time_entry_activity', $this->client->time_entry_activity->all([
+            'limit'=>200
+        ]));
+        Cache::store('file')->forever('query', $this->client->query->all([
+            'limit'=>200
+        ]));
+        Cache::store('file')->forever('issue_status', $this->client->issue_status->all());
+        Cache::store('file')->forever('issue_priority', $this->client->issue_priority->all());
+        Cache::store('file')->forever('tracker', $this->client->tracker->all());
     }
 }
