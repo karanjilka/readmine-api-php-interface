@@ -78,60 +78,61 @@
 
     <div v-for="issue in issues">
         <div class="row">
-            <div class="col-md-1">
+            <div class="col-md-1" style="width:8%">
                 <div>
                     <a style="color:#DD8100" href="{{config('project.url')}}/issues/@{{issue.id}}" target="_blank">
                     <strong>#@{{issue.id}}</strong></a>
+                </div>
+            </div>
+            <div class="col-md-1" style="width:7%">
+                <div>
                     <span v-if="issue.tracker.id==1" class="label label-danger">@{{issue.tracker.name}}</span>
                     <span v-if="issue.tracker.id==2" class="label label-primary">@{{issue.tracker.name}}</span>
                     <span v-if="issue.tracker.id==3" class="label label-warning">@{{issue.tracker.name}}</span>
                     <span v-if="issue.tracker.id==5" class="label label-info">@{{issue.tracker.name}}</span>
                 </div>
             </div>
-            <div class="col-md-7">
+            <div class="col-md-4">
                 <div><strong>
                     <template v-if="issue.parent">
                     (#@{{issue.parent.id}})
                     </template>
                     @{{issue.subject}}</strong></div>
-                    <div>@{{issue.description|limit '150'}}</div>
+                    {{--<div>@{{issue.description|limit '100'}}</div> --}}
             </div>
-            <div class="col-md-3">
-                <div>
-                    <strong>@{{issue.project.name}}</strong>
-                </div>
-                <div>
-                    <span v-if="issue.status.id==1" class="label label-primary">@{{issue.status.name}}</span>
-                    <span v-if="issue.status.id==2" class="label label-info">@{{issue.status.name}}</span>
-                    <span v-if="issue.status.id==3" class="label label-warning">@{{issue.status.name}}</span>
-                    <span v-if="issue.status.id==4" class="label label-default">@{{issue.status.name}}</span>
-                    <span v-if="issue.status.id==5" class="label label-success">@{{issue.status.name}}</span>
-                    <span v-if="issue.status.id==6" class="label label-danger">@{{issue.status.name}}</span>
+            <div class="col-md-2">
+                <strong>@{{issue.project.name}}</strong>
+            </div>
+            <div class="col-md-2" style="width:11%">
+                <span v-if="issue.status.id==1" class="label label-primary">@{{issue.status.name}}</span>
+                <span v-if="issue.status.id==2" class="label label-info">@{{issue.status.name}}</span>
+                <span v-if="issue.status.id==3" class="label label-warning">@{{issue.status.name}}</span>
+                <span v-if="issue.status.id==4" class="label label-default">@{{issue.status.name}}</span>
+                <span v-if="issue.status.id==5" class="label label-success">@{{issue.status.name}}</span>
+                <span v-if="issue.status.id==6" class="label label-danger">@{{issue.status.name}}</span>
 
-                    <span v-if="issue.priority.id==1" class="label label-info">@{{issue.priority.name}}</span>
-                    <span v-if="issue.priority.id==2" class="label label-primary">@{{issue.priority.name}}</span>
-                    <span v-if="issue.priority.id==3" class="label label-warning">@{{issue.priority.name}}</span>
-                    <span v-if="issue.priority.id==4" class="label label-danger">@{{issue.priority.name}}</span>
-                    <span v-if="issue.priority.id==5" class="label label-danger">@{{issue.priority.name}}</span>
-                </div>
-                <div style="padding-top:5px;">
-                    <strong>Start :</strong> @{{issue.start_date}}
+                <span v-if="issue.priority.id==1" class="label label-info">@{{issue.priority.name}}</span>
+                <span v-if="issue.priority.id==2" class="label label-primary">@{{issue.priority.name}}</span>
+                <span v-if="issue.priority.id==3" class="label label-warning">@{{issue.priority.name}}</span>
+                <span v-if="issue.priority.id==4" class="label label-danger">@{{issue.priority.name}}</span>
+                <span v-if="issue.priority.id==5" class="label label-danger">@{{issue.priority.name}}</span>
+            </div>
+            <div class="col-md-2" style="width:12%">
+                <div style="font-size:12px;">
+                    <strong></strong> @{{issue.start_date}}
                     <template v-if="issue.due_date">
-                        <strong>Due :</strong> @{{issue.due_date}}
+                        <strong>To </strong> @{{issue.due_date}}
                     </template>
                 </div>
+            </div>
+            <div class="col-md-2" style="width:12%">
                 <div style="font-weight:bold">
                     <i v-if="issue.assigned_to">@{{issue.assigned_to.name}}</i>
                 </div>
             </div>
-            <div class="col-md-1">
-                <div v-if="issue.estimated_hours">
-                    <strong>Est :</strong> <span class="label label-warning">@{{issue.estimated_hours}}</span>
-                </div>
-            </div>
         </div>
-        <div class="row">
-            <div class="col-md-6">
+        <div class="row" style="padding-top:5px;">
+            <div class="col-md-5">
                 {!! Laform::field('comments','text',['template'=>'none',
                 'attr'=>['v-model'=>'issue.comments','placeholder'=>'Comment','class'=>'input-sm'],
                 'wrapper_attr'=>['v-bind:class'=>'{ \'has-error\': errors[\'issues.\'+$index+\'.comments\']}'],
@@ -154,13 +155,17 @@
                 ]) !!}
             </div>
             <div class="col-md-1">
-            </div>
-            <div class="col-md-1">
                 {!! Laform::field('hours','text',['template'=>'none',
                 'attr'=>['v-model'=>'issue.hours','placeholder'=>'Hour','class'=>'input-sm'],
                 'wrapper_attr'=>['v-bind:class'=>'{ \'has-error\': errors[\'issues.\'+$index+\'.hours\']}'],
                 'field_suffix'=>'<div class="text-danger" v-for="error in errors[\'issues.\'+$index+\'.hours\']">@{{error}}</div>'
                 ]) !!}
+
+            </div>
+            <div class="col-md-1">
+                <div v-if="issue.estimated_hours">
+                <strong>Est :</strong> <span class="label label-warning">@{{issue.estimated_hours}}</span>
+                </div>
             </div>
         </div>
         <hr>

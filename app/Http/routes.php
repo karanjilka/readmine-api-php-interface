@@ -15,9 +15,10 @@ Route::get('/', function () {
     return redirect('redmine/issue');
 });
 
-Route::get('/laform-example', function () {
-    return view('laform-example');
-});
+// Route::get('/laform-example', function () {
+//     return view('laform-example');
+// });
+Route::resource('laform-example','LaFormExampleController');
 
 Route::get('redmine/issue/clear-cache','Redmineapi\RedmineIssueController@clearCache');
 Route::post('redmine/issue/timelog','Redmineapi\RedmineIssueController@postTimeLog');
