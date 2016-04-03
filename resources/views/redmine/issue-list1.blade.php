@@ -2,7 +2,7 @@
 
 @section('content')
 
-    {!! Laform::open(array('url'=>'redmine/issue',
+    {!! Laform::open(array('url'=>'redmine/issues1',
     'class'=>'form-verticle',
     'method'=>'GET'
     )) !!}
@@ -94,23 +94,22 @@
             <th>Project</th>
             <th>To</th>
             <th>Type</th>
-            <th>Hours</th>
-            <th>Comment</th>
-            <th>Activity</th>
+            <th>Priority</th>
+            <th>Status</th>
             <th>Date</th>
-            <th>Hour</th>
+            <th>Hours</th>
         </tr>
         <tr v-for="issue in issues">
             <td>
                 <a style="color:#DD8100" href="{{config('project.url')}}/issues/@{{issue.id}}" target="_blank">
-                <strong>@{{issue.id}}</strong></a>
+                    <strong>@{{issue.id}}</strong></a>
             </td>
             <td>
                 <template v-if="issue.parent">
                     @{{issue.parent.id}}
                  </template>
             </td>
-            <td width="30%">
+            <td>
                 <strong>@{{issue.subject}}</strong>
             </td>
             <td>
@@ -126,6 +125,27 @@
                 <span v-if="issue.tracker.id==5" class="label label-info">@{{issue.tracker.name}}</span>
             </td>
             <td>
+                <span v-if="issue.priority.id==1" class="label label-info">@{{issue.priority.name}}</span>
+                <span v-if="issue.priority.id==2" class="label label-primary">@{{issue.priority.name}}</span>
+                <span v-if="issue.priority.id==3" class="label label-warning">@{{issue.priority.name}}</span>
+                <span v-if="issue.priority.id==4" class="label label-danger">@{{issue.priority.name}}</span>
+                <span v-if="issue.priority.id==5" class="label label-danger">@{{issue.priority.name}}</span>
+            </td>
+            <td>
+                <span v-if="issue.status.id==1" class="label label-primary">@{{issue.status.name}}</span>
+                <span v-if="issue.status.id==2" class="label label-info">@{{issue.status.name}}</span>
+                <span v-if="issue.status.id==3" class="label label-warning">@{{issue.status.name}}</span>
+                <span v-if="issue.status.id==4" class="label label-default">@{{issue.status.name}}</span>
+                <span v-if="issue.status.id==5" class="label label-success">@{{issue.status.name}}</span>
+                <span v-if="issue.status.id==6" class="label label-danger">@{{issue.status.name}}</span>
+            </td>
+            <td>
+                <strong></strong> @{{issue.start_date}}
+                <template v-if="issue.due_date">
+                    <strong>To </strong> @{{issue.due_date}}
+                </template>
+            </td>
+            <td>
                 <div v-if="issue.estimated_hours">
                 <span class="label label-warning">@{{issue.estimated_hours}}</span>
                 <template v-if="issue.spent_time">
@@ -133,39 +153,8 @@
                 </template>
                 </div>
             </td>
-            <td width="20%">
-                {!! Laform::field('comments','text',['template'=>'none',
-                'attr'=>['v-model'=>'issue.comments','placeholder'=>'Comment','class'=>'input-sm'],
-                'wrapper_attr'=>['v-bind:class'=>'{ \'has-error\': errors[\'issues.\'+$index+\'.comments\']}'],
-                'field_suffix'=>'<div class="text-danger" v-for="error in errors[\'issues.\'+$index+\'.comments\']">@{{error}}</div>'
-                ]) !!}
-            </td>
-            <td>
-                 {!! Laform::field('activity_id','select',['template'=>'none',
-                'options'=>[''=>'Select Activity']+$activity,
-                'attr'=>['v-select'=>'issue.activity_id'],
-                'wrapper_attr'=>['v-bind:class'=>'{ \'has-error\': errors[\'issues.\'+$index+\'.activity_id\']}'],
-                'field_suffix'=>'<div class="text-danger" v-for="error in errors[\'issues.\'+$index+\'.activity_id\']">@{{error}}</div>'
-                ]) !!}
-            </td>
-            <td width="8%">
-                 {!! Laform::field('spent_on','text',['template'=>'none',
-                'attr'=>['v-datepicker'=>'issue.spent_on',':dateformat'=>'"yy-mm-dd"','placeholder'=>'Date','class'=>'input-sm'],
-                'wrapper_attr'=>['v-bind:class'=>'{ \'has-error\': errors[\'issues.\'+$index+\'.spent_on\']}'],
-                'field_suffix'=>'<div class="text-danger" v-for="error in errors[\'issues.\'+$index+\'.spent_on\']">@{{error}}</div>'
-                ]) !!}
-            </td>
-            <td width="5%">
-                {!! Laform::field('hours','text',['template'=>'none',
-                'attr'=>['v-model'=>'issue.hours','placeholder'=>'Hour','class'=>'input-sm'],
-                'wrapper_attr'=>['v-bind:class'=>'{ \'has-error\': errors[\'issues.\'+$index+\'.hours\']}'],
-                'field_suffix'=>'<div class="text-danger" v-for="error in errors[\'issues.\'+$index+\'.hours\']">@{{error}}</div>'
-                ]) !!}
-            </td>
         </tr>
     </table>
-    <hr>
-
     <div class="form-group clearfix">
     <div class="pull-right">
         <button class="btn btn-primary btn-lg"> Save </button>
