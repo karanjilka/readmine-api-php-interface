@@ -23,5 +23,7 @@ Route::resource('laform-example','LaFormExampleController');
 Route::get('redmine/issue/clear-cache','Redmineapi\RedmineIssueController@clearCache');
 Route::post('redmine/issue/timelog','Redmineapi\RedmineIssueController@postTimeLog');
 Route::get('redmine/issues1','Redmineapi\RedmineIssueController@issueList1');
+Route::get('redmine/issues-edit','Redmineapi\RedmineIssueController@issueEdit');
+Route::post('redmine/issues-edit','Redmineapi\RedmineIssueController@postIssueEdit');
 Route::resource('redmine/issue','Redmineapi\RedmineIssueController');
 Route::resource('redmine/timeentry','Redmineapi\RedmineTimeEntry');

@@ -25,10 +25,11 @@
               <a class="navbar-brand" href="#">Redmine</a>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
-              <ul class="nav navbar-nav">
-                  <li><a href="{{url('redmine/issue')}}">Issues</a></li>
-                  <li><a href="{{url('redmine/issues1')}}">Issues 1</a></li>
+              <ul class="nav navbar-nav">                  
+                  <li><a href="{{url('redmine/issues1')}}">Issues List</a></li>
+                  <li><a href="{{url('redmine/issues-edit')}}">Issues Edit</a></li>
                   <li><a href="{{url('redmine/issue/create')}}">Create Issues</a></li>
+                  <li><a href="{{url('redmine/issue')}}">Issues Time Entry Log</a></li>
                   <li><a href="{{url('redmine/timeentry/create')}}">Time Entry</a></li>
               </ul>
               <ul class="nav navbar-nav navbar-right">

@@ -132,6 +132,58 @@ class RedmineIssueController extends Controller
         compact('issues', 'users', 'paglinks', 'projects', 'users', 'track', 'per_pages', 'status', 'queries', 'activity'));
     }
 
+    public function issueEdit(Request $request)
+    {
+        $projects = $this->redmine->getProjects()->lists('name', 'id')->toArray();
+        $users = $this->redmine->getUsers()->lists('mail', 'id')->toArray();
+        $track = $this->redmine->getTrack()->lists('name', 'id')->toArray();
+        $status = $this->redmine->getStatus()->lists('name', 'id')->toArray();
+        $queries = $this->redmine->getQueries()->lists('name', 'id')->toArray();
+        $activity = $this->redmine->getActivity()->lists('name', 'id')->toArray();
+        $priority = $this->redmine->getPriority()->lists('name', 'id')->toArray();
+
+        $per_pages = ['25' => '25', '50' => '50', '100' => '100', '200' => '200', '300' => '300'];
+
+        $offset = (($request->input('page', 1) - 1) * $request->input('per_page', 25));
+        $parmas['offset'] = $offset;
+        $parmas['limit'] = $request->input('per_page', 25);
+        if ($request->input('project_id')) {
+            $parmas['project_id'] = $request->input('project_id');
+        }
+        if ($request->input('assigned_to_id')) {
+            $parmas['assigned_to_id'] = $request->input('assigned_to_id');
+        }
+        if ($request->input('status_id')) {
+            $parmas['status_id'] = $request->input('status_id');
+        }
+        if ($request->input('tracker_id')) {
+            $parmas['tracker_id'] = $request->input('tracker_id');
+        }
+        if ($request->input('query_id')) {
+            $parmas['query_id'] = $request->input('query_id');
+        }
+
+        $issues = $this->client->issue->all($parmas);
+        if ($request->input('with_spent_hours')) {
+            foreach($issues['issues'] as $key => $issue){
+                $issues['issues'][$key]['timeentries'] = $this->client->time_entry->all(['limit'=>50,'issue_id'=>$issue['id']]);
+                $issues['issues'][$key]['spent_time'] = 0;
+                if(!empty($issues['issues'][$key]['timeentries']['time_entries'])){
+                    foreach($issues['issues'][$key]['timeentries']['time_entries'] as $entry_key => $time_entry){
+                        $issues['issues'][$key]['spent_time']=$issues['issues'][$key]['spent_time']+$time_entry['hours'];
+                    }
+                }
+            }
+        }
+
+        $pagination = new LengthAwarePaginator($issues['issues'], $issues['total_count'], $parmas['limit'], $request->input('page'));
+        $pagination->setPath('/redmine/issues-edit');
+        $paglinks = $pagination->appends($request->except(['page']))->render();
+
+        return view('redmine.issues-edit',
+        compact('issues', 'users', 'paglinks', 'projects', 'users', 'track', 'per_pages', 'status', 'queries', 'activity','priority'));
+    }
+
     /**
      * Show the form for creating a new resource.
      *
