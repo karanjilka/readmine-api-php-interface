@@ -184,6 +184,43 @@ class RedmineIssueController extends Controller
         compact('issues', 'users', 'paglinks', 'projects', 'users', 'track', 'per_pages', 'status', 'queries', 'activity','priority'));
     }
 
+    public function postIssueEdit(Request $request)
+    {
+        //print_r($request->all());exit;
+        if ($request->input('issues')) {
+            $issues = $request->input('issues');
+            foreach ($issues as $key => $issue) {
+                $this->rules['issues.'.$key.'.subject'] = 'required';
+                $this->rules['issues.'.$key.'.estimated_hours'] = 'numeric';
+                $this->rules['issues.'.$key.'.parent_issue_id'] = 'integer';
+
+                $this->messages['issues.'.$key.'.subject.required'] = 'This field is required';
+
+                $this->messages['issues.'.$key.'.parent_issue_id.integer'] = 'This feild must be number';
+                $this->messages['issues.'.$key.'.estimated_hours.numeric'] = 'This feild must be numeric';
+            }
+        }
+
+        $this->validate($request, $this->rules, $this->messages);
+
+        if ($request->input('issues')) {
+            $issues = $request->input('issues');
+            foreach ($issues as $key => $issue) {
+                $this->client->issue->update($issue['id'],[
+                    'subject' => $issue['subject'],
+                    'assigned_to_id' => (isset($issue['assigned_to']['id']))?$issue['assigned_to']['id']:'',
+                    'parent_issue_id' => (isset($issue['parent']['id']))?$issue['parent']['id']:'',
+                    'start_date' => (isset($issue['start_date']))?$issue['start_date']:'',
+                    'due_date' => (isset($issue['due_date']))?$issue['due_date']:'',
+                    'estimated_hours' => (isset($issue['estimated_hours']))?$issue['estimated_hours']:'',
+                    'tracker_id' => $issue['tracker']['id'],
+                    'priority_id' => $issue['priority']['id'],
+                    'status_id' => $issue['status']['id'],
+                ]);
+            }
+        }
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -210,7 +247,7 @@ class RedmineIssueController extends Controller
         if ($request->input('issues')) {
             $issues = $request->input('issues');
             foreach ($issues as $key => $issue) {
-                $this->rules['issues.'.$key.'.subject'] = 'required|max:255';
+                $this->rules['issues.'.$key.'.subject'] = 'required';
                 $this->rules['issues.'.$key.'.description'] = 'required';
                 $this->rules['issues.'.$key.'.project_id'] = 'required|integer';
                 $this->rules['issues.'.$key.'.estimated_hours'] = 'numeric';
